@@ -1,0 +1,12 @@
+String strConn = "Data Source=.;Initial Catalog=His;User ID=sa;Password=*****";
+SqlConnection conn = new SqlConnection(strConn);
+String sql= "select * from EMPLOYEE "; 
+conn.Open(); 
+SqlCommand cmd = new SqlCommand(sqlId, conn); 
+SqlDataAdapter da = new SqlDataAdapter(cmd); 
+DataSet ds = new DataSet();
+da.Fill(ds, "EMPLOYEE");     
+dataGridView1.DataSource = ds;
+this.dataGridView1.AutoGenerateColumns = false;//是否自动生成列
+dataGridView1.DataMember = "EMPLOYEE"; 
+conn.Close(); 
