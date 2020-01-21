@@ -1,0 +1,68 @@
+c# mysql连接
+1. 新建项目
+
+引用mysql
+
+Form1上加1个按钮、1个dataGridView
+
+Form1.cs代码如下
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using MySql.Data.MySqlClient;
+
+namespace WindowsFormsApp3
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+        private void button1_Click(object sender, EventArgs e)
+        {     String connetStr = "server=192.168.118.150;port=3306;user=cat;password=111; database=test;";
+            // server=127.0.0.1/localhost 代表本机，端口号port默认是3306可以不写
+            MySqlConnection conn = new MySqlConnection(connetStr);           
+                conn.Open();//打开通道，建立连接，可能出现异常,使用try catch语句
+            string sql = "select * from student";
+            MySqlCommand cmd = new MySqlCommand(sql, conn);
+            MySqlDataReader reader = cmd.ExecuteReader();//执行ExecuteReader()返回一个MySqlDataReader对象
+            initgrid();
+            while (reader.Read())//初始索引是-1，执行读取下一行数据，返回值是bool
+            {
+                //Console.WriteLine(reader[0].ToString() + reader[1].ToString() + reader[2].ToString());
+                //Console.WriteLine(reader.GetInt32(0)+reader.GetString(1)+reader.GetString(2));
+                // Console.WriteLine(reader.GetInt32("userid") + reader.GetString("username") + reader.GetString("password"));//"userid"是数据库对应的列名，推荐这种方式           
+                int index = this.dataGridView1.Rows.Add();
+                this.dataGridView1.Rows[index].Cells[0].Value = reader.GetString("snumber");
+                this.dataGridView1.Rows[index].Cells[1].Value = reader.GetString("sname");
+                this.dataGridView1.Rows[index].Cells[2].Value = reader.GetString("sex");
+                this.dataGridView1.Rows[index].Cells[3].Value = reader.GetString("sbirthday");
+                this.dataGridView1.Rows[index].Cells[4].Value = reader.GetString("class");
+            }            
+            conn.Close();
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+        private void initgrid()    {           
+            dataGridView1.Columns.Add(new DataGridViewColumn() { Name = "snumber", HeaderText = "编号", Width = 100, CellTemplate = new DataGridViewTextBoxCell(), MinimumWidth = 100 });
+            dataGridView1.Columns.Add(new DataGridViewColumn() { Name = "sname", HeaderText = "姓名", Width = 100, CellTemplate = new DataGridViewTextBoxCell(), MinimumWidth = 100 });
+            dataGridView1.Columns.Add(new DataGridViewColumn() { Name = "sex", HeaderText = "性别", Width = 100, CellTemplate = new DataGridViewTextBoxCell(), MinimumWidth = 100 });
+            dataGridView1.Columns.Add(new DataGridViewColumn() { Name = "sbirthday", HeaderText = "出生日期", Width = 120, CellTemplate = new DataGridViewTextBoxCell(), MinimumWidth = 120 });
+            dataGridView1.Columns.Add(new DataGridViewColumn() { Name = "class", HeaderText = "班级", Width = 100, CellTemplate = new DataGridViewTextBoxCell(), MinimumWidth = 100 });
+        }       
+    }
+}
