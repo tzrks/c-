@@ -1,0 +1,28 @@
+委托
+class Program
+    {
+        class caculater
+        {
+            public caculater()
+            {
+
+            }
+            public int Add(int x, int y)
+            {
+                return x + y;
+            }
+            public int Sub(int x, int y)
+            {
+                return x - y;
+            }
+        }
+        static void Main(string[] args)
+        {
+            caculater ca=new caculater();
+            Func<int, int, int> fuc1 = new Func<int, int, int>(ca.Add);//委托
+            Console.WriteLine(ca.Add(10, 25));
+            Console.WriteLine(fuc1.Invoke(10,10));//使用委托
+            Console.ReadLine();
+        }      
+
+    }
